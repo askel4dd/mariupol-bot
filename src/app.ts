@@ -22,9 +22,9 @@ async function runApp() {
     // Middlewares
     .use(sequentialize())
     .use(ignoreOld())
-  // .use(attachUser)
-  // .use(i18n.middleware())
-  // .use(configureI18n)
+    // .use(attachUser)
+    .use(i18n.middleware())
+    .use(configureI18n)
   // Menus
   // .use(languageMenu)
   // Commands
