@@ -1,1 +1,1 @@
-web: yarn distribute
+worker: yarn distribute

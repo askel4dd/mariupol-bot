@@ -27,14 +27,18 @@ async function runApp() {
     .use(configureI18n)
   // Menus
   // .use(languageMenu)
+
   // Commands
   bot.command(['help', 'start'], sendHelp)
   bot.command('language', handleLanguage)
+
   // Errors
   bot.catch(console.error)
+
   // Start bot
   await bot.init()
   run(bot)
+
   console.info(`Bot ${bot.botInfo.username} is up and running`)
 }
 
