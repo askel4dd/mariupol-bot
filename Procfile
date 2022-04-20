@@ -1,1 +1,1 @@
-bot: yarn distribute
+web: yarn distribute
