@@ -36,30 +36,37 @@ async function runApp() {
 
   bot.on('message', async (ctx, next) => {
     console.log('ctx.message: ', ctx.message.text)
-    console.log('ctx.questionnaire.step: ', ctx.questionnaire.step)
+    const questionnaire = ctx.session.questionnaire
+    console.log('ctx.questionnaire.step: ', questionnaire.step)
 
-    switch (ctx.questionnaire.step) {
+    switch (questionnaire.step) {
       case 1: {
-        ctx.questionnaire.contact = ctx.message.text
-        ctx.questionnaire.step = 2
+        questionnaire.contact = ctx.message.text
+        questionnaire.step = 2
         ctx.replyWithLocalization('ask_for_details')
         break
       }
       case 2: {
-        ctx.questionnaire.description = ctx.message.text
-        ctx.questionnaire.step = 3
+        questionnaire.description = ctx.message.text
+        questionnaire.step = 3
         ctx.replyWithLocalization('ask_for_time')
         break
       }
       case 3: {
-        ctx.questionnaire.time = ctx.message.text
-        ctx.questionnaire.step = 1
+        questionnaire.time = ctx.message.text
+        questionnaire.step = 1
         ctx.reply(
-          `Contact: ${ctx.questionnaire.contact} Description: ${ctx.questionnaire.description} Time: ${ctx.questionnaire.time}`
+          `Contact: ${questionnaire.contact} Description: ${questionnaire.description} Time: ${questionnaire.time}`
         )
         break
       }
     }
+
+    console.log('before:')
+    console.log('ctx.session.questionnaire: ', ctx.session.questionnaire)
+    ctx.session.questionnaire = questionnaire
+    console.log('after:')
+    console.log('ctx.session.questionnaire: ', ctx.session.questionnaire)
 
     await next()
   })
