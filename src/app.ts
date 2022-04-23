@@ -14,6 +14,7 @@ import i18n from '@/helpers/i18n'
 import languageMenu from '@/menus/language'
 import { handleStartQuestionnaire } from '@/handlers/start'
 import startMongo from '@/helpers/startMongo'
+import { QUESTIONNAIRE_STEP } from './models/Context'
 
 const CHAT_ID = -621653380
 
@@ -41,21 +42,21 @@ async function runApp() {
     const questionnaire = ctx.session.questionnaire
 
     switch (questionnaire.step) {
-      case 1: {
+      case QUESTIONNAIRE_STEP.CONTACT: {
         questionnaire.contact = ctx.message.text
-        questionnaire.step = 2
+        questionnaire.step = QUESTIONNAIRE_STEP.DETAILS
         ctx.replyWithLocalization('ask_for_details')
         break
       }
-      case 2: {
+      case QUESTIONNAIRE_STEP.DETAILS: {
         questionnaire.description = ctx.message.text
-        questionnaire.step = 3
+        questionnaire.step = QUESTIONNAIRE_STEP.TIME
         ctx.replyWithLocalization('ask_for_time')
         break
       }
-      case 3: {
+      case QUESTIONNAIRE_STEP.TIME: {
         questionnaire.time = ctx.message.text
-        questionnaire.step = 0
+        questionnaire.step = QUESTIONNAIRE_STEP.DONE
 
         const authorUser = ctx.message.from?.username
         const message = `ИМЯ И КОНТАКТ: ${questionnaire.contact}\n\nПРОБЛЕМА: ${questionnaire.description}\n\nВРЕМЯ: ${questionnaire.time}\n\n@${authorUser}`

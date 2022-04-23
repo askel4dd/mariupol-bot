@@ -3,6 +3,13 @@ import { DocumentType } from '@typegoose/typegoose'
 import { I18nContext } from '@grammyjs/i18n/dist/source'
 import { User } from '@/models/User'
 
+export enum QUESTIONNAIRE_STEP {
+  DONE = 0,
+  CONTACT = 1,
+  DETAILS = 2,
+  TIME = 3,
+}
+
 type Session = SessionFlavor<{
   questionnaire: {
     step: number
