@@ -1,6 +1,6 @@
 import { NextFunction } from 'grammy'
 import { findOrCreateUser } from '@/models/User'
-import Context from '@/models/Context'
+import { Context } from '@/models/Context'
 
 export default async function attachUser(ctx: Context, next: NextFunction) {
   if (!ctx.from) {

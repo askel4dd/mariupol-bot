@@ -12,8 +12,7 @@ type Session = SessionFlavor<{
   }
 }>
 
-// @ts-ignore
-class Context extends BaseContext implements Session {
+class BotContext extends BaseContext {
   readonly i18n!: I18nContext
   dbuser!: DocumentType<User>
 
@@ -23,4 +22,6 @@ class Context extends BaseContext implements Session {
   }
 }
 
-export default Context
+type Context = BotContext & Session
+
+export { BotContext, Context }

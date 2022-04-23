@@ -3,7 +3,7 @@ import { cwd } from 'process'
 import { load } from 'js-yaml'
 import { readFileSync, readdirSync } from 'fs'
 import { resolve } from 'path'
-import Context from '@/models/Context'
+import { Context } from '@/models/Context'
 
 interface YamlWithName {
   name: string

@@ -1,4 +1,4 @@
-import Context from '@/models/Context'
+import { Context } from '@/models/Context'
 
 export default function sendOptions(ctx: Context) {
   return {

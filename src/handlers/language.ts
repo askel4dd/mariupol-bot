@@ -1,4 +1,4 @@
-import Context from '@/models/Context'
+import { Context } from '@/models/Context'
 import languageMenu from '@/menus/language'
 import sendOptions from '@/helpers/sendOptions'
 

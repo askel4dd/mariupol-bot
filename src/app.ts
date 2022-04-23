@@ -2,8 +2,10 @@ import 'module-alias/register'
 import 'reflect-metadata'
 import 'source-map-support/register'
 
+import { session } from 'grammy'
 import { ignoreOld, sequentialize } from 'grammy-middlewares'
 import { run } from '@grammyjs/runner'
+
 import attachUser from '@/middlewares/attachUser'
 import bot from '@/helpers/bot'
 import configureI18n from '@/middlewares/configureI18n'
@@ -12,7 +14,8 @@ import i18n from '@/helpers/i18n'
 import languageMenu from '@/menus/language'
 import sendHelp from '@/handlers/help'
 import startMongo from '@/helpers/startMongo'
-import { session } from 'grammy'
+
+const CHAT_ID = -621653380
 
 async function runApp() {
   console.log('Starting app...')
@@ -31,13 +34,11 @@ async function runApp() {
   // .use(languageMenu)
 
   // Commands
-  bot.command(['help', 'start'], sendHelp)
+  bot.command(['start'], sendHelp)
   bot.command('language', handleLanguage)
 
   bot.on('message', async (ctx, next) => {
-    console.log('ctx.message: ', ctx.message.text)
     const questionnaire = ctx.session.questionnaire
-    console.log('ctx.questionnaire.step: ', questionnaire.step)
 
     switch (questionnaire.step) {
       case 1: {
@@ -54,19 +55,17 @@ async function runApp() {
       }
       case 3: {
         questionnaire.time = ctx.message.text
-        questionnaire.step = 1
-        ctx.reply(
-          `Contact: ${questionnaire.contact} Description: ${questionnaire.description} Time: ${questionnaire.time}`
-        )
+        questionnaire.step = 0
+
+        const authorUser = ctx.message.from?.username
+        const message = `ИМЯ И КОНТАКТ: ${questionnaire.contact}\n\nПРОБЛЕМА: ${questionnaire.description}\n\nВРЕМЯ: ${questionnaire.time}\n\n@${authorUser}`
+        ctx.api.sendMessage(CHAT_ID, message)
         break
       }
+      default: {
+        // noop
+      }
     }
-
-    console.log('before:')
-    console.log('ctx.session.questionnaire: ', ctx.session.questionnaire)
-    ctx.session.questionnaire = questionnaire
-    console.log('after:')
-    console.log('ctx.session.questionnaire: ', ctx.session.questionnaire)
 
     await next()
   })
