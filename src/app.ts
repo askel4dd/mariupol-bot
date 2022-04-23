@@ -59,7 +59,12 @@ async function runApp() {
         questionnaire.step = QUESTIONNAIRE_STEP.DONE
 
         const authorUser = ctx.message.from?.username
-        const message = `ИМЯ И КОНТАКТ: ${questionnaire.contact}\n\nПРОБЛЕМА: ${questionnaire.description}\n\nВРЕМЯ: ${questionnaire.time}\n\n@${authorUser}`
+        const message =
+          `ИМЯ И КОНТАКТ: ${questionnaire.contact}\n\n` +
+          `ПРОБЛЕМА: ${questionnaire.description}\n\n` +
+          `ВРЕМЯ: ${questionnaire.time}\n\n` +
+          `@${authorUser || ''}`
+
         ctx.api.sendMessage(CHAT_ID, message)
         break
       }
