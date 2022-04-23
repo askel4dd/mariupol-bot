@@ -1,8 +1,18 @@
-import { Bot } from 'grammy'
+import { Bot, SessionFlavor } from 'grammy'
 import Context from '@/models/Context'
 import env from '@/helpers/env'
 
-const bot = new Bot<Context>(env.TOKEN, {
+type Session = SessionFlavor<{
+  questionnaire: {
+    step: number
+    contact?: string
+    description?: string
+    time?: string
+  }
+}>
+
+const bot = new Bot<Context & Session>(env.TOKEN, {
+  // @ts-ignore
   ContextConstructor: Context,
 })
 
