@@ -34,16 +34,19 @@ async function runApp() {
 
   bot.on('message', async (ctx, next) => {
     console.log('ctx.message: ', ctx.message.text)
+    console.log('ctx.questionnaire.step: ', ctx.questionnaire.step)
 
     switch (ctx.questionnaire.step) {
       case 1: {
         ctx.questionnaire.contact = ctx.message.text
         ctx.questionnaire.step = 2
+        ctx.replyWithLocalization('ask_for_details')
         break
       }
       case 2: {
         ctx.questionnaire.description = ctx.message.text
         ctx.questionnaire.step = 3
+        ctx.replyWithLocalization('ask_for_time')
         break
       }
       case 3: {
