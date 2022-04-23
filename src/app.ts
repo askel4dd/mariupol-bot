@@ -12,7 +12,7 @@ import configureI18n from '@/middlewares/configureI18n'
 import handleLanguage from '@/handlers/language'
 import i18n from '@/helpers/i18n'
 import languageMenu from '@/menus/language'
-import sendHelp from '@/handlers/help'
+import { handleStartQuestionnaire } from '@/handlers/start'
 import startMongo from '@/helpers/startMongo'
 
 const CHAT_ID = -621653380
@@ -34,7 +34,7 @@ async function runApp() {
   // .use(languageMenu)
 
   // Commands
-  bot.command(['start'], sendHelp)
+  bot.command(['start'], handleStartQuestionnaire)
   bot.command('language', handleLanguage)
 
   bot.on('message', async (ctx, next) => {
