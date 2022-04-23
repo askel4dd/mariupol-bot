@@ -32,6 +32,33 @@ async function runApp() {
   bot.command(['help', 'start'], sendHelp)
   bot.command('language', handleLanguage)
 
+  bot.on('message', async (ctx, next) => {
+    console.log('ctx.message: ', ctx.message.text)
+
+    switch (ctx.questionnaire.step) {
+      case 1: {
+        ctx.questionnaire.contact = ctx.message.text
+        ctx.questionnaire.step = 2
+        break
+      }
+      case 2: {
+        ctx.questionnaire.description = ctx.message.text
+        ctx.questionnaire.step = 3
+        break
+      }
+      case 3: {
+        ctx.questionnaire.time = ctx.message.text
+        ctx.questionnaire.step = 1
+        ctx.reply(
+          `Contact: ${ctx.questionnaire.contact} Description: ${ctx.questionnaire.description} Time: ${ctx.questionnaire.time}`
+        )
+        break
+      }
+    }
+
+    await next()
+  })
+
   // Errors
   bot.catch(console.error)
 
