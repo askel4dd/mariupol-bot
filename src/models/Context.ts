@@ -1,9 +1,19 @@
-import { Context as BaseContext } from 'grammy'
+import { Context as BaseContext, SessionFlavor } from 'grammy'
 import { DocumentType } from '@typegoose/typegoose'
 import { I18nContext } from '@grammyjs/i18n/dist/source'
 import { User } from '@/models/User'
 
-class Context extends BaseContext {
+type Session = SessionFlavor<{
+  questionnaire: {
+    step: number
+    contact?: string
+    description?: string
+    time?: string
+  }
+}>
+
+// @ts-ignore
+class Context extends BaseContext implements Session {
   readonly i18n!: I18nContext
   dbuser!: DocumentType<User>
 
