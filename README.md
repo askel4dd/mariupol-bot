@@ -54,15 +54,15 @@ git push heroku main
 
 # Project structure
 
-.
-├── locales         # Bot replies/phrases in different languages
-└── src
-    ├── app.ts      # Entry file of Bot
-    ├── models      # Domain models
-    ├── handlers    # [Commands](https://grammy.dev/guide/commands.html) handlers (/start, /help, etc.)
-    ├── middlewares # [Middlewares](https://grammy.dev/guide/middleware.html)
-    ├── menus       # [Menus](https://grammy.dev/plugins/menu.html)
-    └── helpers     # Handy util functions
+    .
+    ├── locales         # Bot replies/phrases in different languages
+    └── src
+        ├── app.ts      # Entry file of Bot
+        ├── models      # Domain models
+        ├── handlers    # [Commands](https://grammy.dev/guide/commands.html) handlers (/start, /help, etc.)
+        ├── middlewares # [Middlewares](https://grammy.dev/guide/middleware.html)
+        ├── menus       # [Menus](https://grammy.dev/plugins/menu.html)
+        └── helpers     # Handy util functions
 
 # License
 
