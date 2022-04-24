@@ -15,8 +15,9 @@ import i18n from '@/helpers/i18n'
 import languageMenu from '@/menus/language'
 import { handleStartQuestionnaire } from '@/handlers/start'
 import startMongo from '@/helpers/startMongo'
-import { QUESTIONNAIRE_STEP } from './models/Context'
+import { QUESTIONNAIRE_STEP } from './models/Questionnaire'
 import env from './helpers/env'
+import { Questionnaire } from './models/Questionnaire'
 
 const CHAT_ID = -621653380
 
@@ -41,43 +42,39 @@ async function runApp() {
     // .use(attachUser)
     .use(i18n.middleware())
     .use(configureI18n)
-    .use(session({ initial: () => ({ questionnaire: { step: 1 } }) }))
+    .use(session({ initial: () => ({ questionnaire: new Questionnaire() }) }))
   // Menus
   // .use(languageMenu)
 
   // Commands
-  bot.command(['start'], handleStartQuestionnaire)
-  bot.command('test', () => {
-    throw 'test'
-  })
+  bot.command('start', handleStartQuestionnaire)
   bot.command('language', handleLanguage)
 
   bot.on('message', async (ctx, next) => {
+    console.log(ctx.update.message)
+
     const questionnaire = ctx.session.questionnaire
+    const messageText = ctx.message.text
 
     switch (questionnaire.step) {
       case QUESTIONNAIRE_STEP.CONTACT: {
-        questionnaire.contact = ctx.message.text
+        questionnaire.contact = messageText
         questionnaire.step = QUESTIONNAIRE_STEP.DETAILS
         ctx.replyWithLocalization('ask_for_details')
         break
       }
       case QUESTIONNAIRE_STEP.DETAILS: {
-        questionnaire.description = ctx.message.text
+        questionnaire.description = messageText
         questionnaire.step = QUESTIONNAIRE_STEP.TIME
         ctx.replyWithLocalization('ask_for_time')
         break
       }
       case QUESTIONNAIRE_STEP.TIME: {
-        questionnaire.time = ctx.message.text
+        questionnaire.time = messageText
         questionnaire.step = QUESTIONNAIRE_STEP.DONE
 
         const authorUser = ctx.message.from?.username
-        const message =
-          `ИМЯ И КОНТАКТ: ${questionnaire.contact}\n\n` +
-          `ПРОБЛЕМА: ${questionnaire.description}\n\n` +
-          `ВРЕМЯ: ${questionnaire.time}\n\n` +
-          `@${authorUser || ''}`
+        const message = questionnaire.resultMessage(authorUser)
 
         ctx.api.sendMessage(CHAT_ID, message)
         break
@@ -86,6 +83,37 @@ async function runApp() {
         // noop
       }
     }
+
+    console.log('message ctx.session: ', ctx.session)
+
+    await next()
+  })
+
+  bot.on('edited_message', async (ctx, next) => {
+    console.log(ctx.update.edited_message)
+
+    const questionnaire = ctx.session.questionnaire
+    const editedMessageText = ctx.update.edited_message.text
+
+    switch (questionnaire.step) {
+      case QUESTIONNAIRE_STEP.CONTACT: {
+        questionnaire.contact = editedMessageText
+        break
+      }
+      case QUESTIONNAIRE_STEP.DETAILS: {
+        questionnaire.description = editedMessageText
+        break
+      }
+      case QUESTIONNAIRE_STEP.TIME: {
+        questionnaire.time = editedMessageText
+        break
+      }
+      default: {
+        // noop
+      }
+    }
+
+    console.log('edited_message ctx.session: ', ctx.session)
 
     await next()
   })

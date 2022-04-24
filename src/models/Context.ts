@@ -2,22 +2,9 @@ import { Context as BaseContext, SessionFlavor } from 'grammy'
 import { DocumentType } from '@typegoose/typegoose'
 import { I18nContext } from '@grammyjs/i18n/dist/source'
 import { User } from '@/models/User'
+import { Questionnaire } from './Questionnaire'
 
-export enum QUESTIONNAIRE_STEP {
-  DONE = 0,
-  CONTACT = 1,
-  DETAILS = 2,
-  TIME = 3,
-}
-
-type Session = SessionFlavor<{
-  questionnaire: {
-    step: number
-    contact?: string
-    description?: string
-    time?: string
-  }
-}>
+type Session = SessionFlavor<{ questionnaire: Questionnaire }>
 
 class BotContext extends BaseContext {
   readonly i18n!: I18nContext
