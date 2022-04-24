@@ -1,4 +1,7 @@
 import { Message } from '@grammyjs/types'
+import { Context } from './Context'
+
+const MODERATOR_CHAT_ID = -621653380
 
 export enum QUESTIONNAIRE_STEP {
     DONE = 0,
@@ -13,7 +16,7 @@ type Answer = {
 }
 
 export class Questionnaire {
-    public step: QUESTIONNAIRE_STEP = 0
+    private step: QUESTIONNAIRE_STEP = 0
     private contact: Answer = { text: '' }
     private description: Answer = { text: '' }
     private time: Answer = { text: '' }
@@ -22,31 +25,35 @@ export class Questionnaire {
         this.step = QUESTIONNAIRE_STEP.CONTACT
     }
 
-    public setContact(message: Message) {
-        this.contact.text = message.text
-        this.contact.messageId = message.message_id
-        this.step = QUESTIONNAIRE_STEP.DETAILS
-    }
+    public update(context: Context) {
+        const message = context.update.message!
 
-    public setDescription(message: Message) {
-        this.description.text = message.text
-        this.description.messageId = message.message_id
-        this.step = QUESTIONNAIRE_STEP.TIME
-    }
+        switch (this.step) {
+            case QUESTIONNAIRE_STEP.CONTACT: {
+                this.setContact(message)
+                context.replyWithLocalization('ask_for_details')
+                break
+            }
+            case QUESTIONNAIRE_STEP.DETAILS: {
+                this.setDescription(message)
+                context.replyWithLocalization('ask_for_time')
+                break
+            }
+            case QUESTIONNAIRE_STEP.TIME: {
+                this.setTime(message)
 
-    public setTime(message: Message) {
-        this.time.text = message.text
-        this.time.messageId = message.message_id
-        this.step = QUESTIONNAIRE_STEP.DONE
-    }
+                const authorUser = message.from?.username
 
-    public resultMessage(authorUser?: string): string {
-        return (
-            `ИМЯ И КОНТАКТ: ${this.contact.text || ''}\n\n` +
-            `ПРОБЛЕМА: ${this.description.text || ''}\n\n` +
-            `ВРЕМЯ: ${this.time.text || ''}\n\n` +
-            `@${authorUser || ''}`
-        )
+                context.api.sendMessage(
+                    MODERATOR_CHAT_ID,
+                    this.resultMessage(authorUser)
+                )
+                break
+            }
+            default: {
+                // noop
+            }
+        }
     }
 
     public edit(editedMessage: Message) {
@@ -64,5 +71,32 @@ export class Questionnaire {
         if (this.time.messageId === editedMessageId) {
             this.time.text = editedMessageText
         }
+    }
+
+    private setContact(message: Message) {
+        this.contact.text = message.text
+        this.contact.messageId = message.message_id
+        this.step = QUESTIONNAIRE_STEP.DETAILS
+    }
+
+    private setDescription(message: Message) {
+        this.description.text = message.text
+        this.description.messageId = message.message_id
+        this.step = QUESTIONNAIRE_STEP.TIME
+    }
+
+    private setTime(message: Message) {
+        this.time.text = message.text
+        this.time.messageId = message.message_id
+        this.step = QUESTIONNAIRE_STEP.DONE
+    }
+
+    private resultMessage(authorUser?: string): string {
+        return (
+            `ИМЯ И КОНТАКТ: ${this.contact.text || ''}\n\n` +
+            `ПРОБЛЕМА: ${this.description.text || ''}\n\n` +
+            `ВРЕМЯ: ${this.time.text || ''}\n\n` +
+            `@${authorUser || ''}`
+        )
     }
 }
