@@ -9,4 +9,5 @@ dotenv.config({ path: resolve(cwd(), '.env') })
 export default cleanEnv(process.env, {
   TOKEN: str(),
   MONGO: str(),
+  SENTRY_DSN: str(),
 })

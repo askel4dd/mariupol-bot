@@ -5,6 +5,7 @@ import 'source-map-support/register'
 import { session } from 'grammy'
 import { ignoreOld, sequentialize } from 'grammy-middlewares'
 import { run } from '@grammyjs/runner'
+import * as Sentry from '@sentry/node'
 
 import attachUser from '@/middlewares/attachUser'
 import bot from '@/helpers/bot'
@@ -15,8 +16,18 @@ import languageMenu from '@/menus/language'
 import { handleStartQuestionnaire } from '@/handlers/start'
 import startMongo from '@/helpers/startMongo'
 import { QUESTIONNAIRE_STEP } from './models/Context'
+import env from './helpers/env'
 
 const CHAT_ID = -621653380
+
+Sentry.init({
+  dsn: env.SENTRY_DSN,
+
+  // Set tracesSampleRate to 1.0 to capture 100%
+  // of transactions for performance monitoring.
+  // We recommend adjusting this value in production
+  tracesSampleRate: 1.0,
+})
 
 async function runApp() {
   console.log('Starting app...')
@@ -36,6 +47,9 @@ async function runApp() {
 
   // Commands
   bot.command(['start'], handleStartQuestionnaire)
+  bot.command('test', () => {
+    throw 'test'
+  })
   bot.command('language', handleLanguage)
 
   bot.on('message', async (ctx, next) => {
@@ -77,7 +91,7 @@ async function runApp() {
   })
 
   // Errors
-  bot.catch(console.error)
+  bot.catch(Sentry.captureException)
 
   // Start bot
   await bot.init()

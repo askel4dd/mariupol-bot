@@ -17,6 +17,7 @@
     "@grammyjs/i18n": "^0.5.0",
     "@grammyjs/menu": "^1.0.4",
     "@grammyjs/runner": "^1.0.3",
+    "@sentry/node": "^6.19.6",
     "dotenv": "^10.0.0",
     "envalid": "^7.2.2",
     "grammy": "^1.5.0",
