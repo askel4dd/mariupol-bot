@@ -8,7 +8,6 @@
   "license": "MIT",
   "scripts": {
     "distribute": "yarn build-ts && node dist/app.js",
-    "web": "yarn build-ts && node dist/web.js",
     "develop": "tsc-watch --skipLibCheck --onSuccess 'node dist/app.js'",
     "build-ts": "tsc --skipLibCheck",
     "pretty": "prettier --check src",
