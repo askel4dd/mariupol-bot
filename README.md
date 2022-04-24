@@ -1,4 +1,4 @@
-# Mariupol Bot
+# Mariupol Bot 🇺🇦
 
 # Local Development
 
