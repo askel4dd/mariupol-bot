@@ -5,6 +5,9 @@
     "main": "dist/app.js",
     "repository": "https://github.com/askel4dd/mariupol-bot",
     "author": "askel4dd",
+    "engines": {
+        "node": ">=14.13.1"
+    },
     "license": "MIT",
     "scripts": {
         "distribute": "yarn build-ts && node dist/app.js",

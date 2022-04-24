@@ -2,6 +2,11 @@
 
 # Local Development
 
+### Pre-requirements
+
+-   Install NodeJS >=14.13.1
+-   Install Yarn
+
 1. Clone this repo: `git clone https://github.com/askel4dd/mariupol-bot`
 2. Run `mv .env.sample .env` in the root directory to create `.env` file with the environment variables listed below
 3. Run `yarn` in the root directory
