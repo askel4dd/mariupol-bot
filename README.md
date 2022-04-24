@@ -1,23 +1,52 @@
-# Telegram bot starter based on [grammY](https://grammy.dev)
+# Mariupol Bot
 
-Please, enjoy this starter template for Telegram bots based on [grammY](https://grammy.dev). It includes most common middlewares, MongoDB integration, language picker and internationalization and shows basic encapsulation techniques used by me.
+# Local Development
 
-# Installation and local launch
-
-1. Clone this repo: `git clone https://github.com/Borodutch/telegram-bot-starter`
-2. Launch the [mongo database](https://www.mongodb.com/) locally
-3. Create `.env` with the environment variables listed below
-4. Run `yarn` in the root folder
-5. Run `yarn develop`
-
-And you should be good to go! Feel free to fork and submit pull requests. Thanks!
+1. Clone this repo: `git clone https://github.com/askel4dd/mariupol-bot`
+2. Run `mv .env.sample .env` in the root directory to create `.env` file with the environment variables listed below
+3. Run `yarn` in the root directory
+4. Run `yarn develop`
 
 # Environment variables
 
-- `TOKEN` — Telegram bot token
-- `MONGO` — URL of the mongo database
+-   `TOKEN` — Telegram bot token
+-   `MONGO` — URL of the mongo database
+-   `SENTRY_DSN` — [Sentry DSN](https://docs.sentry.io/product/sentry-basics/dsn-explainer/)
 
 Also, please, consider looking at `.env.sample`.
+
+# Deploy production
+
+Bot is hosted on Heroku. Follow [these steps](https://dashboard.heroku.com/apps/mariupol-bot/deploy/heroku-git) to deploy production:
+
+## Install the Heroku CLI
+
+Download and install the [Heroku CLI](https://devcenter.heroku.com/articles/heroku-command-line).
+
+If you haven't already, log in to your Heroku account and follow the prompts to create a new SSH public key.
+
+```bash
+heroku login
+```
+
+## Clone the repository
+
+Use Git to clone mariupol-bot's source code to your local machine.
+
+```bash
+heroku git:clone -a mariupol-bot
+cd mariupol-bot
+```
+
+## Deploy your changes
+
+Make some changes to the code you just cloned and deploy them to Heroku using Git.
+
+```bash
+git add .
+git commit -am "make it better"
+git push heroku main
+```
 
 # License
 
