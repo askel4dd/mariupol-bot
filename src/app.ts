@@ -53,66 +53,44 @@ async function runApp() {
     bot.command('language', handleLanguage)
 
     bot.on('message', async (ctx, next) => {
-        console.log(ctx.update.message)
-
         const questionnaire = ctx.session.questionnaire
-        const messageText = ctx.message.text
+        const message = ctx.update.message
 
         switch (questionnaire.step) {
             case QUESTIONNAIRE_STEP.CONTACT: {
-                questionnaire.setContact(messageText)
+                questionnaire.setContact(message)
                 ctx.replyWithLocalization('ask_for_details')
                 break
             }
             case QUESTIONNAIRE_STEP.DETAILS: {
-                questionnaire.setDescription(messageText)
+                questionnaire.setDescription(message)
                 ctx.replyWithLocalization('ask_for_time')
                 break
             }
             case QUESTIONNAIRE_STEP.TIME: {
-                questionnaire.setTime(messageText)
+                questionnaire.setTime(message)
 
                 const authorUser = ctx.message.from?.username
-                const message = questionnaire.resultMessage(authorUser)
 
-                ctx.api.sendMessage(CHAT_ID, message)
+                ctx.api.sendMessage(
+                    CHAT_ID,
+                    questionnaire.resultMessage(authorUser)
+                )
                 break
             }
             default: {
                 // noop
             }
         }
-
-        console.log('message ctx.session: ', ctx.session)
 
         await next()
     })
 
     bot.on('edited_message', async (ctx, next) => {
-        console.log(ctx.update.edited_message)
-
         const questionnaire = ctx.session.questionnaire
-        const editedMessageText = ctx.update.edited_message.text
+        const editedMessage = ctx.update.edited_message
 
-        switch (questionnaire.step) {
-            case QUESTIONNAIRE_STEP.CONTACT: {
-                questionnaire.contact = editedMessageText
-                break
-            }
-            case QUESTIONNAIRE_STEP.DETAILS: {
-                questionnaire.description = editedMessageText
-                break
-            }
-            case QUESTIONNAIRE_STEP.TIME: {
-                questionnaire.time = editedMessageText
-                break
-            }
-            default: {
-                // noop
-            }
-        }
-
-        console.log('edited_message ctx.session: ', ctx.session)
+        questionnaire.edit(editedMessage)
 
         await next()
     })
