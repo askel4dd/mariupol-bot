@@ -59,9 +59,9 @@ git push heroku main
     └── src
         ├── app.ts      # Entry file of Bot
         ├── models      # Domain models
-        ├── handlers    # [Commands](https://grammy.dev/guide/commands.html) handlers (/start, /help, etc.)
-        ├── middlewares # [Middlewares](https://grammy.dev/guide/middleware.html)
-        ├── menus       # [Menus](https://grammy.dev/plugins/menu.html)
+        ├── handlers    # Commands handlers https://grammy.dev/guide/commands.html
+        ├── middlewares # Middlewares https://grammy.dev/guide/middleware.html
+        ├── menus       # Menus https://grammy.dev/plugins/menu.html
         └── helpers     # Handy util functions
 
 # License
