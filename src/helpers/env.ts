@@ -8,5 +8,5 @@ dotenv.config({ path: resolve(cwd(), '.env') })
 // eslint-disable-next-line node/no-process-env
 export default cleanEnv(process.env, {
     TOKEN: str(),
-    SENTRY_DSN: str(),
+    SENTRY_DSN: str({ default: undefined }),
 })

@@ -9,8 +9,8 @@
 
 # Environment variables
 
--   `TOKEN` — [Telegram bot token](https://core.telegram.org/bots#6-botfather)
--   `SENTRY_DSN` — [Sentry DSN](https://docs.sentry.io/product/sentry-basics/dsn-explainer/)
+-   `TOKEN` (required) — [Telegram bot token](https://core.telegram.org/bots#6-botfather)
+-   `SENTRY_DSN` (optional) — [Sentry DSN](https://docs.sentry.io/product/sentry-basics/dsn-explainer/)
 
 Also, please, consider looking at `.env.sample`.
 
