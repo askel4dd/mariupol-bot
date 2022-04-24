@@ -27,10 +27,6 @@ Sentry.init({
 async function runApp() {
     console.log('Starting app...')
 
-    // Mongo
-    //   await startMongo()
-    //   console.log('Mongo connected')
-
     bot
         // Middlewares
         .use(sequentialize())

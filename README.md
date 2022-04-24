@@ -9,8 +9,7 @@
 
 # Environment variables
 
--   `TOKEN` — Telegram bot token
--   `MONGO` — URL of the mongo database
+-   `TOKEN` — [Telegram bot token](https://core.telegram.org/bots#6-botfather)
 -   `SENTRY_DSN` — [Sentry DSN](https://docs.sentry.io/product/sentry-basics/dsn-explainer/)
 
 Also, please, consider looking at `.env.sample`.
