@@ -18,11 +18,14 @@ i_need_help:
 i_want_to_help:
   how_can_you_help: Как вы хотите помочь?
   i_volunteer: Хочу быть волонтером
-  are_you_in_russia: Вы находитесь сейчас в России, Беларуси или странах СНГ?
-  ask_volunteer_form: Заполните анкету волонтера
   want_to_give_feedback: Фидбек
   feedback:
     ask_for_feedback: Напишите фидбек
     thanks: Спасибо! Вы нам очень помогаете
+  volunteer:
+    are_you_in_russia: Вы находитесь сейчас в России, Беларуси или странах СНГ?
+    ask_volunteer_form: Заполните анкету волонтера
+    thanks: Спасибо! Мы свяжемся с вами
+
 language: Пожалуйста, выберите язык.
 language_selected: <b>Бот</b> теперь говорит по-русски.

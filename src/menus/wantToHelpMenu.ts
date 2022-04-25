@@ -2,12 +2,15 @@ import { Menu } from '@grammyjs/menu'
 
 import { Context } from '@/models/Context'
 import { FeedbackQuestionnaire } from '@/models/FeedbackQuestionnaire'
+import { VolunteerQuestionnaire } from '@/models/VolunteerQuestionnaire'
 
 export const wantToHelpMenu = new Menu<Context>('want-to-help-menu')
     .text(
         (ctx) => ctx.i18n.t('i_want_to_help.i_volunteer'),
         (ctx) => {
-            console.log('i_volunteer')
+            const qustionnaire = new VolunteerQuestionnaire()
+            ctx.session.questionnaire = qustionnaire
+            qustionnaire.start(ctx)
         }
     )
     .row()
