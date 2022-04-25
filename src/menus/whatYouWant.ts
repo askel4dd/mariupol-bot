@@ -19,7 +19,7 @@ const whatYouWantMenu = new Menu<Context>('what-you-want-menu')
         (ctx) => {
             ctx.api.sendMessage(
                 env.I_WANT_TO_HELP_CHANNEL_ID,
-                'Я хочу помочь' + ` @${ctx.session.questionnaire.userName}`
+                'Я хочу помочь' + ` @${ctx.session.userName}`
             )
         }
     )

@@ -27,16 +27,13 @@ export class INeedHelpQuestionnaire implements Questionnaire {
     public start(context: Context) {
         this.step = QUESTIONNAIRE_STEP.CONTACT
 
-        const from = context.update.message?.from
-        this.userId = from?.id
-        this.userName = from?.username
+        this.userId = context.session.userId
+        this.userName = context.session.userName
 
         context.replyWithLocalization(
             'i_need_help.ask_for_contact',
             sendOptions(context)
         )
-
-        context.replyWithLocalization('i_need_help.success_message')
     }
 
     public update(context: Context) {
@@ -61,6 +58,8 @@ export class INeedHelpQuestionnaire implements Questionnaire {
                     this.resultMessage(),
                     { parse_mode: 'HTML' }
                 )
+
+                context.replyWithLocalization('i_need_help.success_message')
                 break
             }
             default: {
