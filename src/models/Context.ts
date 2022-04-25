@@ -4,16 +4,20 @@ import { I18nContext } from '@grammyjs/i18n/dist/source'
 import { User } from '@/models/User'
 import { Questionnaire } from './Questionnaire'
 
-type Session = SessionFlavor<{ questionnaire: Questionnaire }>
+type Session = SessionFlavor<{
+    questionnaire: Questionnaire
+    userId?: number
+    userName?: string
+}>
 
 class BotContext extends BaseContext {
-  readonly i18n!: I18nContext
-  dbuser!: DocumentType<User>
+    readonly i18n!: I18nContext
+    dbuser!: DocumentType<User>
 
-  replyWithLocalization: this['reply'] = (text, other, ...rest) => {
-    text = this.i18n.t(text)
-    return this.reply(text, other, ...rest)
-  }
+    replyWithLocalization: this['reply'] = (text, other, ...rest) => {
+        text = this.i18n.t(text)
+        return this.reply(text, other, ...rest)
+    }
 }
 
 type Context = BotContext & Session

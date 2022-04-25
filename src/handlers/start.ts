@@ -11,7 +11,8 @@ export function handleStartQuestionnaire(ctx: Context) {
     }
 
     const from = ctx.update.message?.from
-    ctx.session.questionnaire.identify(from?.id, from?.username)
+    ctx.session.userId = from?.id
+    ctx.session.userName = from?.username
 
     return ctx.replyWithLocalization('what_you_want', {
         ...sendOptions(ctx),

@@ -3,10 +3,13 @@ import { Menu } from '@grammyjs/menu'
 import env from '@/helpers/env'
 import { Context } from '@/models/Context'
 import { sendOptions } from '@/helpers/sendOptions'
+import { INeedHelpQuestionnaire } from '@/models/INeedHelpQuestionnaire'
 
 const whatYouWantMenu = new Menu<Context>('what-you-want-menu')
     .text('Мне нужна помощь', (ctx) => {
-        ctx.session.questionnaire.start()
+        const qustionnaire = new INeedHelpQuestionnaire()
+        qustionnaire.start(ctx.session.userId, ctx.session.userName)
+        ctx.session.questionnaire = qustionnaire
         return ctx.replyWithLocalization('ask_for_contact', sendOptions(ctx))
     })
     // .row()

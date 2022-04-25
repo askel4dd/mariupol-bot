@@ -35,9 +35,7 @@ async function runApp() {
         // .use(attachUser)
         .use(i18n.middleware())
         .use(configureI18n)
-        .use(
-            session({ initial: () => ({ questionnaire: new Questionnaire() }) })
-        )
+        .use(session({ initial: () => ({}) }))
         // Menus
         .use(whatYouWantMenu)
 
