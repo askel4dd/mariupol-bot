@@ -1,7 +1,6 @@
+import env from '@/helpers/env'
 import { Message } from '@grammyjs/types'
 import { Context } from './Context'
-
-const MODERATOR_CHAT_ID = -621653380
 
 export enum QUESTIONNAIRE_STEP {
     DONE = 0,
@@ -16,10 +15,17 @@ type Answer = {
 }
 
 export class Questionnaire {
+    public userId?: number
+    public userName?: string
     private step: QUESTIONNAIRE_STEP = 0
     private contact: Answer = { text: '' }
     private description: Answer = { text: '' }
     private time: Answer = { text: '' }
+
+    public identify(userId?: number, userName?: string) {
+        this.userId = userId
+        this.userName = userName || ''
+    }
 
     public start() {
         this.step = QUESTIONNAIRE_STEP.CONTACT
@@ -42,11 +48,9 @@ export class Questionnaire {
             case QUESTIONNAIRE_STEP.TIME: {
                 this.setTime(message)
 
-                const authorUser = message.from?.username
-
                 context.api.sendMessage(
-                    MODERATOR_CHAT_ID,
-                    this.resultMessage(authorUser)
+                    env.I_NEED_HELP_CHANNEL_ID,
+                    this.resultMessage(this.userName)
                 )
                 break
             }

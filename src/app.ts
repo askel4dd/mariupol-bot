@@ -14,6 +14,7 @@ import i18n from '@/helpers/i18n'
 import { handleStartQuestionnaire } from '@/handlers/start'
 import env from './helpers/env'
 import { Questionnaire } from './models/Questionnaire'
+import { whatYouWantMenu } from './menus/whatYouWant'
 
 Sentry.init({
     dsn: env.SENTRY_DSN,
@@ -37,8 +38,8 @@ async function runApp() {
         .use(
             session({ initial: () => ({ questionnaire: new Questionnaire() }) })
         )
-    // Menus
-    // .use(languageMenu)
+        // Menus
+        .use(whatYouWantMenu)
 
     // Commands
     bot.command('start', handleStartQuestionnaire)
