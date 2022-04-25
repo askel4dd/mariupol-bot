@@ -21,6 +21,8 @@ i_want_to_help:
   are_you_in_russia: Вы находитесь сейчас в России, Беларуси или странах СНГ?
   ask_volunteer_form: Заполните анкету волонтера
   want_to_give_feedback: Фидбек
-  ask_for_feedback: Напишите фидбек
+  feedback:
+    ask_for_feedback: Напишите фидбек
+    thanks: Спасибо! Вы нам очень помогаете
 language: Пожалуйста, выберите язык.
 language_selected: <b>Бот</b> теперь говорит по-русски.
