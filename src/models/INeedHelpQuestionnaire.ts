@@ -1,4 +1,5 @@
 import env from '@/helpers/env'
+import { sendOptions } from '@/helpers/sendOptions'
 import { Message } from '@grammyjs/types'
 import { Context } from './Context'
 import { Questionnaire } from './Questionnaire'
@@ -23,10 +24,19 @@ export class INeedHelpQuestionnaire implements Questionnaire {
     private description: Answer = { text: '' }
     private time: Answer = { text: '' }
 
-    public start(userId?: number, userName?: string) {
+    public start(context: Context) {
         this.step = QUESTIONNAIRE_STEP.CONTACT
-        this.userId = userId
-        this.userName = userName
+
+        const from = context.update.message?.from
+        this.userId = from?.id
+        this.userName = from?.username
+
+        context.replyWithLocalization(
+            'i_need_help.ask_for_contact',
+            sendOptions(context)
+        )
+
+        context.replyWithLocalization('i_need_help.success_message')
     }
 
     public update(context: Context) {
@@ -35,12 +45,12 @@ export class INeedHelpQuestionnaire implements Questionnaire {
         switch (this.step) {
             case QUESTIONNAIRE_STEP.CONTACT: {
                 this.setContact(message)
-                context.replyWithLocalization('ask_for_details')
+                context.replyWithLocalization('i_need_help.ask_for_details')
                 break
             }
             case QUESTIONNAIRE_STEP.DETAILS: {
                 this.setDescription(message)
-                context.replyWithLocalization('ask_for_time')
+                context.replyWithLocalization('i_need_help.ask_for_time')
                 break
             }
             case QUESTIONNAIRE_STEP.TIME: {

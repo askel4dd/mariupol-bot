@@ -4,7 +4,7 @@ import { Context } from './Context'
 export interface Questionnaire {
     userId?: number
     userName?: string
-    start(userId?: number, userName?: string): void
+    start(context: Context): void
     update(context: Context): void
     edit(editedMessage: Message): void
 }
