@@ -4,7 +4,7 @@ import { Message } from '@grammyjs/types'
 import { Context } from './Context'
 import { Questionnaire } from './Questionnaire'
 
-export enum QUESTIONNAIRE_STEP {
+enum QUESTIONNAIRE_STEP {
     DONE = 0,
     CONTACT = 1,
     DETAILS = 2,
@@ -108,6 +108,7 @@ export class INeedHelpQuestionnaire implements Questionnaire {
             `ИМЯ И КОНТАКТ: ${this.contact.text || ''}\n\n` +
             `ПРОБЛЕМА: ${this.description.text || ''}\n\n` +
             `ВРЕМЯ: ${this.time.text || ''}\n\n` +
+            `User ID: ${this.userId}\n` +
             `Username: @${this.userName || ''}\n` +
             `Профиль: <a href="tg://user?id=${this.userId}">${
                 this.userName || this.userId

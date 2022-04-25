@@ -4,15 +4,9 @@ import { whatYouWantMenu } from '@/menus/whatYouWant'
 
 export function handleStartQuestionnaire(ctx: Context) {
     if (ctx.update.message?.chat.type !== 'private') {
-        ctx.reply(
-            'Извините, в данный момент бот поддерживает только приватные сообщения'
-        )
+        // Ignore NOT private channels
         return
     }
-
-    const from = ctx.update.message?.from
-    ctx.session.userId = from?.id
-    ctx.session.userName = from?.username
 
     return ctx.replyWithLocalization('what_you_want', {
         ...sendOptions(ctx),

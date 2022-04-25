@@ -1,5 +1,8 @@
 name: Русский
-what_you_want: Что вы хотите?
+yes: Да
+no: Нет
+back: << Назад
+what_you_want: Здравствуйте! Что вы хотите?
 i_need_help_button: Мне нужна помощь
 i_want_to_help_button: Я хочу помочь
 i_need_help:
@@ -12,5 +15,12 @@ i_need_help:
     Укажите детали: сколько человек, откуда, куда, когда. Это сэкономит время поиска решения.
   ask_for_time: Спасибо. Укажите временные рамки решения проблемы.
   success_message: Заявка принята!
+i_want_to_help:
+  how_can_you_help: Как вы хотите помочь?
+  i_volunteer: Хочу быть волонтером
+  are_you_in_russia: Вы находитесь сейчас в России, Беларуси или странах СНГ?
+  ask_volunteer_form: Заполните анкету волонтера
+  want_to_give_feedback: Фидбек
+  ask_for_feedback: Напишите фидбек
 language: Пожалуйста, выберите язык.
 language_selected: <b>Бот</b> теперь говорит по-русски.

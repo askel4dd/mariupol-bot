@@ -13,8 +13,9 @@ import handleLanguage from '@/handlers/language'
 import i18n from '@/helpers/i18n'
 import { handleStartQuestionnaire } from '@/handlers/start'
 import env from './helpers/env'
-import { Questionnaire } from './models/Questionnaire'
 import { whatYouWantMenu } from './menus/whatYouWant'
+import { wantToHelpMenu } from './menus/wantToHelpMenu'
+import attachUser from './middlewares/attachUser'
 
 Sentry.init({
     dsn: env.SENTRY_DSN,
@@ -32,10 +33,10 @@ async function runApp() {
         // Middlewares
         .use(sequentialize())
         .use(ignoreOld())
-        // .use(attachUser)
+        .use(session({ initial: () => ({}) }))
+        .use(attachUser)
         .use(i18n.middleware())
         .use(configureI18n)
-        .use(session({ initial: () => ({}) }))
         // Menus
         .use(whatYouWantMenu)
 

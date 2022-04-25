@@ -1,8 +1,9 @@
 import { Menu } from '@grammyjs/menu'
 
-import env from '@/helpers/env'
 import { Context } from '@/models/Context'
 import { INeedHelpQuestionnaire } from '@/models/INeedHelpQuestionnaire'
+import { sendOptions } from '@/helpers/sendOptions'
+import { wantToHelpMenu } from './wantToHelpMenu'
 
 const whatYouWantMenu = new Menu<Context>('what-you-want-menu')
     .text(
@@ -14,14 +15,8 @@ const whatYouWantMenu = new Menu<Context>('what-you-want-menu')
         }
     )
     .row()
-    .text(
-        (ctx) => ctx.i18n.t('i_want_to_help_button'),
-        (ctx) => {
-            ctx.api.sendMessage(
-                env.I_WANT_TO_HELP_CHANNEL_ID,
-                'Я хочу помочь' + ` @${ctx.session.userName}`
-            )
-        }
-    )
+    .submenu((ctx) => ctx.i18n.t('i_want_to_help_button'), 'want-to-help-menu')
+
+whatYouWantMenu.register(wantToHelpMenu)
 
 export { whatYouWantMenu }
