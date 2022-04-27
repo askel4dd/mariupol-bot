@@ -47,7 +47,9 @@ export class INeedHelpQuestionnaire implements Questionnaire {
             }
             case QUESTIONNAIRE_STEP.DETAILS: {
                 this.setDescription(message)
-                context.replyWithLocalization('i_need_help.ask_for_time')
+                context.replyWithLocalization('i_need_help.ask_for_time', {
+                    parse_mode: 'HTML',
+                })
                 break
             }
             case QUESTIONNAIRE_STEP.TIME: {
