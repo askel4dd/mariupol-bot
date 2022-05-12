@@ -68,6 +68,14 @@ export class VolunteerQuestionnaire implements Questionnaire {
     }
 
     private resultMessage(): string {
-        return `${this.details.text || ''}\n\n` + '#помогат'
+        return (
+            `${this.details.text || ''}\n\n` +
+            `User ID: ${this.userId}\n` +
+            `Username: @${this.userName || ''}\n` +
+            `Профиль: <a href="tg://user?id=${this.userId}">${
+                this.userName || this.userId
+            }</a>\n` +
+            '#помогат'
+        )
     }
 }
