@@ -41,7 +41,8 @@ export class VolunteerQuestionnaire implements Questionnaire {
 
                 context.api.sendMessage(
                     env.I_WANT_TO_HELP_CHANNEL_ID,
-                    this.resultMessage()
+                    this.resultMessage(),
+                    { parse_mode: 'HTML' }
                 )
 
                 context.replyWithLocalization('i_want_to_help.volunteer.thanks')
