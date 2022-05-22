@@ -60,7 +60,7 @@ async function runApp() {
         const questionnaire = ctx.session.questionnaire
         const editedMessage = ctx.update.edited_message
 
-        questionnaire.edit(editedMessage)
+        questionnaire && questionnaire.edit(editedMessage)
 
         await next()
     })
