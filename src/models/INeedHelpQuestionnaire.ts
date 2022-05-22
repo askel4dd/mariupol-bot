@@ -87,6 +87,10 @@ export class INeedHelpQuestionnaire implements Questionnaire {
         }
     }
 
+    public isActive(): boolean {
+        return this.step !== QUESTIONNAIRE_STEP.DONE
+    }
+
     private setContact(message: Message) {
         this.contact.text = message.text
         this.contact.messageId = message.message_id

@@ -7,4 +7,5 @@ export interface Questionnaire {
     start(context: Context): void
     update(context: Context): void
     edit(editedMessage: Message): void
+    isActive(): boolean
 }

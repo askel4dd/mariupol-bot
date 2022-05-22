@@ -47,7 +47,11 @@ async function runApp() {
     bot.on('message', async (ctx, next) => {
         const questionnaire = ctx.session.questionnaire
 
-        questionnaire.update(ctx)
+        if (questionnaire && questionnaire.isActive()) {
+            questionnaire.update(ctx)
+        } else {
+            handleStartQuestionnaire(ctx)
+        }
 
         await next()
     })

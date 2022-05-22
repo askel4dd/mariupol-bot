@@ -63,9 +63,14 @@ export class VolunteerQuestionnaire implements Questionnaire {
         }
     }
 
+    public isActive(): boolean {
+        return this.step !== QUESTIONNAIRE_STEP.DONE
+    }
+
     private setDetails(message: Message) {
         this.details.text = message.text
         this.details.messageId = message.message_id
+        this.step = QUESTIONNAIRE_STEP.DONE
     }
 
     private resultMessage(): string {

@@ -63,9 +63,14 @@ export class FeedbackQuestionnaire implements Questionnaire {
         }
     }
 
+    public isActive(): boolean {
+        return this.step !== QUESTIONNAIRE_STEP.DONE
+    }
+
     private setFeedback(message: Message) {
         this.feedback.text = message.text
         this.feedback.messageId = message.message_id
+        this.step = QUESTIONNAIRE_STEP.DONE
     }
 
     private resultMessage(): string {
