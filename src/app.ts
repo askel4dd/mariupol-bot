@@ -1,5 +1,4 @@
 import 'module-alias/register'
-import 'reflect-metadata'
 import 'source-map-support/register'
 
 import { session } from 'grammy'
@@ -9,7 +8,6 @@ import * as Sentry from '@sentry/node'
 
 import bot from '@/helpers/bot'
 import configureI18n from '@/middlewares/configureI18n'
-import handleLanguage from '@/handlers/language'
 import i18n from '@/helpers/i18n'
 import { handleStartQuestionnaire } from '@/handlers/start'
 import env from './helpers/env'
@@ -42,7 +40,6 @@ async function runApp() {
 
     // Commands
     bot.command('start', handleStartQuestionnaire)
-    bot.command('language', handleLanguage)
 
     bot.on('message', async (ctx, next) => {
         const questionnaire = ctx.session.questionnaire
