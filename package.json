@@ -12,6 +12,8 @@
     "scripts": {
         "distribute": "yarn build-ts && node dist/app.js",
         "develop": "tsc-watch --skipLibCheck --onSuccess 'node dist/app.js'",
+        "start": "node dist/app.js",
+        "build": "yarn build-ts",
         "build-ts": "tsc --skipLibCheck",
         "pretty": "prettier --check src",
         "lint": "yarn pretty && eslint --max-warnings 0 --ext ts,tsx,json src"
@@ -24,8 +26,7 @@
         "dotenv": "^10.0.0",
         "envalid": "^7.2.2",
         "grammy": "^1.5.0",
-        "grammy-middlewares": "^1.0.11",
-        "typescript": "^4.5.2"
+        "grammy-middlewares": "^1.0.11"
     },
     "devDependencies": {
         "@typegoose/typegoose": "^9.3.1",
@@ -43,7 +44,8 @@
         "module-alias": "^2.2.2",
         "prettier": "^2.5.1",
         "source-map-support": "^0.5.21",
-        "tsc-watch": "^4.5.0"
+        "tsc-watch": "^4.5.0",
+        "typescript": "^4.5.2"
     },
     "_moduleAliases": {
         "@": "dist"

@@ -1,1 +1,1 @@
-worker: yarn distribute
+worker: yarn start
