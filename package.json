@@ -25,10 +25,10 @@
         "@sentry/node": "^6.19.6",
         "dotenv": "^10.0.0",
         "envalid": "^7.2.2",
-        "module-alias": "^2.2.2",
-        "source-map-support": "^0.5.21",
         "grammy": "^1.5.0",
-        "grammy-middlewares": "^1.0.11"
+        "grammy-middlewares": "^1.0.11",
+        "module-alias": "^2.2.2",
+        "source-map-support": "^0.5.21"
     },
     "devDependencies": {
         "@types/node": "^16.11.12",
