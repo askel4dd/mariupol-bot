@@ -10,11 +10,9 @@
     },
     "license": "MIT",
     "scripts": {
-        "distribute": "yarn build-ts && node dist/app.js",
         "develop": "tsc-watch --skipLibCheck --onSuccess 'node dist/app.js'",
         "start": "node dist/app.js",
-        "build": "yarn build-ts",
-        "build-ts": "tsc --skipLibCheck",
+        "build": "tsc --skipLibCheck",
         "pretty": "prettier --check src",
         "lint": "yarn pretty && eslint --max-warnings 0 --ext ts,tsx,json src"
     },
