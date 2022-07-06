@@ -45,7 +45,10 @@ export class FeedbackQuestionnaire implements Questionnaire {
                     { parse_mode: 'HTML' }
                 )
 
-                context.replyWithLocalization('i_want_to_help.feedback.thanks')
+                context.replyWithLocalization('i_want_to_help.feedback.thanks', {
+                    ...sendOptions(context),
+                    reply_markup: context.session.restartMenu,
+                })
                 break
             }
             default: {

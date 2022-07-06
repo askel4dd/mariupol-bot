@@ -11,8 +11,7 @@ import configureI18n from '@/middlewares/configureI18n'
 import i18n from '@/helpers/i18n'
 import { handleStartQuestionnaire } from '@/handlers/start'
 import env from './helpers/env'
-import { whatYouWantMenu } from './menus/whatYouWant'
-import { wantToHelpMenu } from './menus/wantToHelpMenu'
+import {restartMenu, topWhatYouWantMenu} from "@/menus/whatYouWant";
 import attachUser from './middlewares/attachUser'
 
 Sentry.init({
@@ -36,7 +35,8 @@ async function runApp() {
         .use(i18n.middleware())
         .use(configureI18n)
         // Menus
-        .use(whatYouWantMenu)
+        .use(restartMenu)
+        .use(topWhatYouWantMenu)
 
     // Commands
     bot.command('start', handleStartQuestionnaire)

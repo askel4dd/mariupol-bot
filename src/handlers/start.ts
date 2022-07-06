@@ -1,6 +1,6 @@
 import { Context } from '@/models/Context'
 import { sendOptions } from '@/helpers/sendOptions'
-import { whatYouWantMenu } from '@/menus/whatYouWant'
+import { topWhatYouWantMenu } from '@/menus/whatYouWant'
 
 export function handleStartQuestionnaire(ctx: Context) {
     if (ctx.update.message?.chat.type !== 'private') {
@@ -10,6 +10,6 @@ export function handleStartQuestionnaire(ctx: Context) {
 
     return ctx.replyWithLocalization('what_you_want', {
         ...sendOptions(ctx),
-        reply_markup: whatYouWantMenu,
+        reply_markup: topWhatYouWantMenu,
     })
 }

@@ -45,7 +45,10 @@ export class VolunteerQuestionnaire implements Questionnaire {
                     { parse_mode: 'HTML' }
                 )
 
-                context.replyWithLocalization('i_want_to_help.volunteer.thanks')
+                context.replyWithLocalization('i_want_to_help.volunteer.thanks', {
+                    ...sendOptions(context),
+                    reply_markup: context.session.restartMenu,
+                })
                 break
             }
             default: {

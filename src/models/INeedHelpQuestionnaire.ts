@@ -61,7 +61,10 @@ export class INeedHelpQuestionnaire implements Questionnaire {
                     { parse_mode: 'HTML' }
                 )
 
-                context.replyWithLocalization('i_need_help.success_message')
+                context.replyWithLocalization('i_need_help.success_message', {
+                    ...sendOptions(context),
+                    reply_markup: context.session.restartMenu,
+                })
                 break
             }
             default: {
