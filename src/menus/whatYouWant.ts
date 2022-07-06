@@ -71,5 +71,5 @@ function getRestartMenu(id: string, submenu_id: string) {
 //   'want-to-help-menu-inner'
 // )
 
-export const restartMenu = getRestartMenu('restart-menu', 'want-to-help-menu-inner')
+export const restartMenu = getRestartMenu('restart-menu', 'what-you-want-menu-inner')
 restartMenu.register(innerWhatYouWantMenu)
