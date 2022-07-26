@@ -331,7 +331,7 @@ async def new_user_details(update: Update, context: ContextTypes.DEFAULT_TYPE):
         f'#new_request'
     )
     await update.message.get_bot().send_message(
-        os.environ['I_WANT_TO_HELP_CHANNEL_ID'],
+        os.environ['I_NEED_HELP_CHANNEL_ID'],
         channel_text,
         parse_mode='HTML',
     )
@@ -385,7 +385,7 @@ async def ticket_edit_result(update: Update, context: ContextTypes.DEFAULT_TYPE)
         f'#ticket_edit'
     )
     await update.message.get_bot().send_message(
-        os.environ['I_WANT_TO_HELP_CHANNEL_ID'],
+        os.environ['I_NEED_HELP_CHANNEL_ID'],
         channel_text,
         parse_mode='HTML',
     )
@@ -408,7 +408,7 @@ async def ticket_status(update: Update, context: ContextTypes.DEFAULT_TYPE):
         f'#status'
     )
     await query.message.get_bot().send_message(
-        os.environ['I_WANT_TO_HELP_CHANNEL_ID'],
+        os.environ['I_NEED_HELP_CHANNEL_ID'],
         channel_text,
         parse_mode='HTML',
     )
@@ -438,7 +438,7 @@ async def emergency_result(update: Update, context: ContextTypes.DEFAULT_TYPE):
         f'#emergency'
     )
     await update.message.get_bot().send_message(
-        os.environ['I_WANT_TO_HELP_CHANNEL_ID'],
+        os.environ['I_NEED_HELP_CHANNEL_ID'],
         channel_text,
         parse_mode='HTML',
     )
