@@ -90,6 +90,7 @@ async def send_message(bot, channel_id, message_type, message_tag, user=None, te
         channel_id,
         channel_text,
         parse_mode='HTML',
+        disable_web_page_preview=True,
     )
 
 
@@ -304,7 +305,9 @@ async def protection_no(update: Update, context: ContextTypes.DEFAULT_TYPE):
     reply_markup = InlineKeyboardMarkup(keyboard)
     await query.message.reply_text(
         _('i_need_help_wizard.estonia_protect_me'),
-        reply_markup=reply_markup
+        reply_markup=reply_markup,
+        parse_mode='HTML',
+        disable_web_page_preview=True,
     )
     return HELP_IN_ESTONIA_SWITCH
 
@@ -434,7 +437,7 @@ async def ticket_status(update: Update, context: ContextTypes.DEFAULT_TYPE):
         channel_id=os.environ['I_NEED_HELP_CHANNEL_ID'],
         message_type='УЗНАТЬ СТАТУС ЗАЯВКИ',
         message_tag='request_status',
-        user=query.message.from_user,
+        user=query.from_user,
         last_name=last_name,
     )
 
@@ -544,11 +547,11 @@ def main() -> None:
     persistence = PicklePersistence(filepath=os.path.join(path, 'conversationbot'))
     application = Application.builder().token(os.environ['TOKEN']).persistence(persistence).build()
 
-    # Add conversation handler with the states GENDER, PHOTO, LOCATION and BIO
+    PRIVATE_TEXT = filters.TEXT & filters.ChatType.PRIVATE
     conv_handler = ConversationHandler(
         entry_points=[
             CommandHandler('start', start),
-            MessageHandler(filters.TEXT, start)
+            MessageHandler(PRIVATE_TEXT, start)
         ],
         states={
             WHAT_YOU_WANT: [
@@ -560,12 +563,12 @@ def main() -> None:
                 CallbackQueryHandler(i_want_to_help__feedback, pattern='^want_to_help__feedback$'),
             ],
             FEEDBACK_MODE: [
-                MessageHandler(filters.TEXT, feedback_questionnaire),
+                MessageHandler(PRIVATE_TEXT, feedback_questionnaire),
             ],
             RESTART: [
                 CommandHandler('error', gen_error),
                 CallbackQueryHandler(restart),
-                MessageHandler(filters.TEXT, restart)
+                MessageHandler(PRIVATE_TEXT, restart)
             ],
             COUNTRY_SWITCH: [
                 CallbackQueryHandler(country_russia, pattern='^country_russia$'),
@@ -595,13 +598,13 @@ def main() -> None:
                 CallbackQueryHandler(existing_user, pattern='^yes$'),
             ],
             NEW_USER_ASK_FOR_LAST_NAME: [
-                MessageHandler(filters.TEXT, new_user_last_name),
+                MessageHandler(PRIVATE_TEXT, new_user_last_name),
             ],
             NEW_USER_ASK_FOR_DETAILS: [
-                MessageHandler(filters.TEXT, new_user_details),
+                MessageHandler(PRIVATE_TEXT, new_user_details),
             ],
             EXISTING_USER: [
-                MessageHandler(filters.TEXT, existing_user_switch),
+                MessageHandler(PRIVATE_TEXT, existing_user_switch),
             ],
             ACTION_SWITCH: [
                 CallbackQueryHandler(ticket_edit, pattern='^edit$'),
@@ -609,10 +612,10 @@ def main() -> None:
                 CallbackQueryHandler(emergency, pattern='^emergency$'),
             ],
             TICKET_EDIT: [
-                MessageHandler(filters.TEXT, ticket_edit_result),
+                MessageHandler(PRIVATE_TEXT, ticket_edit_result),
             ],
             EMERGENCY: [
-                MessageHandler(filters.TEXT, emergency_result),
+                MessageHandler(PRIVATE_TEXT, emergency_result),
             ]
         },
         fallbacks=[CommandHandler('finish', finish)],
