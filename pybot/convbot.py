@@ -2,8 +2,10 @@
 import logging, os
 import yaml
 import os
+import html
 
 from telegram import __version__ as TG_VER, InlineKeyboardButton, InlineKeyboardMarkup
+import traceback
 
 try:
     from telegram import __version_info__
@@ -63,6 +65,34 @@ def get_restart_markup():
     return reply_markup
 
 
+async def send_message(bot, channel_id, message_type, message_tag, user=None, text=None, last_name=None, details=None):
+    channel_text_header = f'Тип обращения: {message_type}\n'
+    channel_text_footer = '\n'
+    if user is not None:
+        user_id = html.escape(str(user.id or ''))
+        username = html.escape(str(user.username))
+        channel_text_footer = (
+            f'User ID: {user_id}\n'
+            f'Username: @{username}\n'
+            f'Профиль: <a href="tg://user?id={user_id}">{username or user_id}</a>\n'
+            f'#{message_tag}'
+        )
+    channel_text_body = ''
+    if text:
+        channel_text_body += html.escape(str(text) or '') + '\n'
+    if last_name:
+        channel_text_body += 'Фамилия: ' + html.escape(str(last_name or '')) + '\n'
+    if details:
+        channel_text_body += 'Детали: ' + html.escape(str(details or '')) + '\n'
+
+    channel_text = channel_text_header + channel_text_body + channel_text_footer
+    await bot.send_message(
+        channel_id,
+        channel_text,
+        parse_mode='HTML',
+    )
+
+
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Starts the conversation and asks the user about their gender."""
 
@@ -82,6 +112,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
 async def i_need_help(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     query = update.callback_query
     await query.answer()
+    await query.edit_message_reply_markup(None)
     keyboard = [
         [InlineKeyboardButton(_('i_need_help_wizard.country_russia'), callback_data='country_russia')],
         [InlineKeyboardButton(_('i_need_help_wizard.country_ukraine'), callback_data='country_ukraine')],
@@ -98,6 +129,7 @@ async def i_need_help(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int
 async def i_want_to_help(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     query = update.callback_query
     await query.answer()
+    await query.edit_message_reply_markup(None)
     keyboard = [
         [InlineKeyboardButton(_('i_want_to_help.i_volunteer'), callback_data='want_to_help__volunteer')],
         [InlineKeyboardButton(_('i_want_to_help.want_to_give_feedback'), callback_data='want_to_help__feedback')],
@@ -110,6 +142,7 @@ async def i_want_to_help(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
 async def i_want_to_help__volunteer(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
+    await query.edit_message_reply_markup(None)
     await query.message.reply_text(
         _('i_want_to_help.volunteer.ask_volunteer_form'),
         parse_mode='HTML',
@@ -122,6 +155,7 @@ async def i_want_to_help__volunteer(update: Update, context: ContextTypes.DEFAUL
 async def i_want_to_help__feedback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
+    await query.edit_message_reply_markup(None)
     await query.message.reply_text(
         _('i_want_to_help.feedback.ask_for_feedback')
     )
@@ -130,21 +164,14 @@ async def i_want_to_help__feedback(update: Update, context: ContextTypes.DEFAULT
 
 async def feedback_questionnaire(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text
-    user = update.message.from_user
-
-    channel_text = (
-        f'{text or ""}\n'
-        f'User ID: {user.id}\n'
-        f'Username: @{user.username}\n'
-        f'Профиль: <a href="tg://user?id={user.id}">{user.username or user.id}</a>\n'
-        f'#feedback'
+    await send_message(
+        bot=update.message.get_bot(),
+        channel_id=os.environ['I_WANT_TO_HELP_CHANNEL_ID'],
+        message_type='ФИДБЕК',
+        message_tag='feedback',
+        text=text,
+        user=update.message.from_user,
     )
-    await update.message.get_bot().send_message(
-        os.environ['I_WANT_TO_HELP_CHANNEL_ID'],
-        channel_text,
-        parse_mode='HTML',
-    )
-
     await update.message.reply_text(_('i_want_to_help.volunteer.thanks'), reply_markup=get_restart_markup())
     return RESTART
 
@@ -152,6 +179,7 @@ async def feedback_questionnaire(update: Update, context: ContextTypes.DEFAULT_T
 async def country_other(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
+    await query.edit_message_reply_markup(None)
     await query.message.reply_text(_('i_need_help_wizard.reply_other'), reply_markup=get_restart_markup())
     return RESTART
 
@@ -159,6 +187,7 @@ async def country_other(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def country_latvia(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
+    await query.edit_message_reply_markup(None)
     await query.message.reply_text(_('i_need_help_wizard.reply_latvia'), reply_markup=get_restart_markup())
     return RESTART
 
@@ -166,6 +195,7 @@ async def country_latvia(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def country_ukraine(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
+    await query.edit_message_reply_markup(None)
     await query.message.reply_text(
         _('i_need_help_wizard.reply_ukraine'),
         parse_mode='HTML',
@@ -177,6 +207,7 @@ async def country_ukraine(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def country_russia(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
+    await query.edit_message_reply_markup(None)
     keyboard = [
         [
             InlineKeyboardButton(_('yes'), callback_data='yes'),
@@ -196,6 +227,7 @@ async def country_russia(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def help_in_russia(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
+    await query.edit_message_reply_markup(None)
     await query.message.reply_text(
         _('i_need_help_wizard.help_in_russia'),
         parse_mode='HTML',
@@ -207,6 +239,7 @@ async def help_in_russia(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def country_estonia(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
+    await query.edit_message_reply_markup(None)
     keyboard = [
         [
             InlineKeyboardButton(_('yes'), callback_data='yes'),
@@ -226,6 +259,7 @@ async def country_estonia(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def ask_about_protection(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
+    await query.edit_message_reply_markup(None)
     keyboard = [
         [
             InlineKeyboardButton(_('yes'), callback_data='yes'),
@@ -245,6 +279,7 @@ async def ask_about_protection(update: Update, context: ContextTypes.DEFAULT_TYP
 async def protection_yes(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
+    await query.edit_message_reply_markup(None)
     await query.message.reply_text(
         _('i_need_help_wizard.estonia_final'),
         parse_mode='HTML',
@@ -257,6 +292,7 @@ async def protection_yes(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def protection_no(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
+    await query.edit_message_reply_markup(None)
     keyboard = [
         [
             InlineKeyboardButton(_('i_need_help_wizard.protection.everything_is_ok'), callback_data='ok'),
@@ -276,6 +312,7 @@ async def protection_no(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def everything_is_ok(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
+    await query.edit_message_reply_markup(None)
     await query.message.reply_text(_('i_need_help_wizard.final_no_contact'), reply_markup=get_restart_markup())
     return RESTART
 
@@ -283,6 +320,7 @@ async def everything_is_ok(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def go_further(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
+    await query.edit_message_reply_markup(None)
     keyboard = [
         [
             InlineKeyboardButton(_('yes'), callback_data='yes'),
@@ -302,6 +340,7 @@ async def go_further(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def new_user(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
+    await query.edit_message_reply_markup(None)
     await query.message.reply_text(
         _('i_need_help_wizard.questionnaire.new_user.prompt'),
         parse_mode='HTML',
@@ -319,22 +358,17 @@ async def new_user_last_name(update: Update, context: ContextTypes.DEFAULT_TYPE)
 async def new_user_details(update: Update, context: ContextTypes.DEFAULT_TYPE):
     details = update.message.text
     last_name = context.user_data['last_name']
-    user = update.message.from_user
 
-    channel_text = (
-        f'Тип обращения: НОВЫЙ ЗАПРОС\n'
-        f'Фамилия: {last_name}\n'
-        f'Детали: {details}\n'
-        f'User ID: {user.id}\n'
-        f'Username: @{user.username}\n'
-        f'Профиль: <a href="tg://user?id={user.id}">{user.username or user.id}</a>\n'
-        f'#new_request'
+    await send_message(
+        bot=update.message.get_bot(),
+        channel_id=os.environ['I_NEED_HELP_CHANNEL_ID'],
+        message_type='НОВЫЙ ЗАПРОС',
+        message_tag='new_request',
+        user=update.message.from_user,
+        last_name=last_name,
+        details=details
     )
-    await update.message.get_bot().send_message(
-        os.environ['I_NEED_HELP_CHANNEL_ID'],
-        channel_text,
-        parse_mode='HTML',
-    )
+
     await update.message.reply_text(_('i_need_help_wizard.final'), reply_markup=get_restart_markup())
     return RESTART
 
@@ -342,6 +376,7 @@ async def new_user_details(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def existing_user(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
+    await query.edit_message_reply_markup(None)
     await query.message.reply_text(_('i_need_help_wizard.questionnaire.existing_user.ask_last_name'))
     return EXISTING_USER
 
@@ -367,27 +402,23 @@ async def existing_user_switch(update: Update, context: ContextTypes.DEFAULT_TYP
 async def ticket_edit(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
+    await query.edit_message_reply_markup(None)
     await query.message.reply_text(_('i_need_help_wizard.questionnaire.edit.prompt'))
     return TICKET_EDIT
 
 
 async def ticket_edit_result(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    user = update.message.from_user
     changes = update.message.text
     last_name = context.user_data['last_name']
-    channel_text = (
-        f'Тип обращения: ИЗМЕНЕНИЕ В ЗАЯВКЕ\n'
-        f'Фамилия: {last_name}\n'
-        f'Изменение информации: {changes or ""}\n'
-        f'User ID: {user.id}\n'
-        f'Username: @{user.username}\n'
-        f'Профиль: <a href="tg://user?id={user.id}">{user.username or user.id}</a>\n'
-        f'#ticket_edit'
-    )
-    await update.message.get_bot().send_message(
-        os.environ['I_NEED_HELP_CHANNEL_ID'],
-        channel_text,
-        parse_mode='HTML',
+
+    await send_message(
+        bot=update.message.get_bot(),
+        channel_id=os.environ['I_NEED_HELP_CHANNEL_ID'],
+        message_type='ИЗМЕНЕНИЕ В ЗАЯВКЕ',
+        message_tag='request_edit',
+        user=update.message.from_user,
+        last_name=last_name,
+        details=changes,
     )
 
     await update.message.reply_text(_('i_need_help_wizard.final'), reply_markup=get_restart_markup())
@@ -396,22 +427,17 @@ async def ticket_edit_result(update: Update, context: ContextTypes.DEFAULT_TYPE)
 
 async def ticket_status(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
-    user = query.message.from_user
     last_name = context.user_data['last_name']
 
-    channel_text = (
-        f'Тип обращения: УЗНАТЬ СТАТУС ЗАЯВКИ\n'
-        f'Фамилия: {last_name}\n'
-        f'User ID: {user.id}\n'
-        f'Username: @{user.username}\n'
-        f'Профиль: <a href="tg://user?id={user.id}">{user.username or user.id}</a>\n'
-        f'#status'
+    await send_message(
+        bot=query.message.get_bot(),
+        channel_id=os.environ['I_NEED_HELP_CHANNEL_ID'],
+        message_type='УЗНАТЬ СТАТУС ЗАЯВКИ',
+        message_tag='request_status',
+        user=query.message.from_user,
+        last_name=last_name,
     )
-    await query.message.get_bot().send_message(
-        os.environ['I_NEED_HELP_CHANNEL_ID'],
-        channel_text,
-        parse_mode='HTML',
-    )
+
     await query.message.reply_text(_('i_need_help_wizard.questionnaire.status.operator'),
                                    reply_markup=get_restart_markup())
     return RESTART
@@ -420,27 +446,23 @@ async def ticket_status(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def emergency(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
+    await query.edit_message_reply_markup(None)
     await query.message.reply_text(_('i_need_help_wizard.questionnaire.emergency.prompt'))
     return EMERGENCY
 
 
 async def emergency_result(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    user = update.message.from_user
-    emergency_text = update.message.text
     last_name = context.user_data['last_name']
-    channel_text = (
-        f'Тип обращения: СРОЧНАЯ ПОМОЩЬ\n'
-        f'Фамилия: {last_name}\n'
-        f'Ситуация: {emergency_text or ""}\n'
-        f'User ID: {user.id}\n'
-        f'Username: @{user.username}\n'
-        f'Профиль: <a href="tg://user?id={user.id}">{user.username or user.id}</a>\n'
-        f'#emergency'
-    )
-    await update.message.get_bot().send_message(
-        os.environ['I_NEED_HELP_CHANNEL_ID'],
-        channel_text,
-        parse_mode='HTML',
+    emergency_text = update.message.text
+
+    await send_message(
+        bot=update.message.get_bot(),
+        channel_id=os.environ['I_NEED_HELP_CHANNEL_ID'],
+        message_type='СРОЧНАЯ ПОМОЩЬ',
+        message_tag='emergency',
+        user=update.message.from_user,
+        last_name=last_name,
+        details=emergency_text,
     )
 
     await update.message.reply_text(_('i_need_help_wizard.final'), reply_markup=get_restart_markup())
@@ -451,6 +473,7 @@ async def restart(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     if query:
         await query.answer()
+        await query.edit_message_reply_markup(None)
         message = query.message
     else:
         message = update.message
@@ -472,17 +495,45 @@ async def finish(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Cancels and ends the conversation."""
     user = update.message.from_user
     logger.info("User %s canceled the conversation.", user.first_name)
-    await update.message.reply_text(
-        "Bye! I hope we can talk again some day.", reply_markup=ReplyKeyboardRemove()
+
+    await update.message.reply_text(_('i_need_help_wizard.final_no_contact'), reply_markup=get_restart_markup())
+    return RESTART
+
+
+async def gen_error(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    raise Exception('meow')
+
+
+async def error_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    logger.error(msg="Exception while handling an update:", exc_info=context.error)
+
+    tb_list = traceback.format_exception(None, context.error, context.error.__traceback__)
+    tb_string = "".join(tb_list)
+
+    await send_message(
+        bot=context.bot,
+        channel_id=os.environ['I_NEED_HELP_CHANNEL_ID'],
+        message_type='ОШИБКА',
+        message_tag='error',
+        user=None,
+        text=tb_string
     )
-    return ConversationHandler.END
+
+    if hasattr(update, 'message') and update.message:
+        await update.message.reply_text(
+            _('error'),
+            parse_mode='HTML',
+            reply_markup=get_restart_markup(),
+            disable_web_page_preview=True,
+        )
+    return RESTART
 
 
 def main() -> None:
     """Run the bot."""
     # Create the Application and pass it your bot's token.
     path = os.path.dirname(os.path.abspath(__file__))
-    envpath = os.path.join(path, '.env')
+    envpath = os.path.normpath(os.path.join(path, '..', '.env'))
     if os.path.exists(envpath):
         with open(envpath, 'rt') as conf:
             confdata = conf.readlines()
@@ -495,7 +546,10 @@ def main() -> None:
 
     # Add conversation handler with the states GENDER, PHOTO, LOCATION and BIO
     conv_handler = ConversationHandler(
-        entry_points=[CommandHandler("start", start), MessageHandler(filters.TEXT, start)],
+        entry_points=[
+            CommandHandler('start', start),
+            MessageHandler(filters.TEXT, start)
+        ],
         states={
             WHAT_YOU_WANT: [
                 CallbackQueryHandler(i_need_help, pattern='^i_need_help_button$'),
@@ -509,6 +563,7 @@ def main() -> None:
                 MessageHandler(filters.TEXT, feedback_questionnaire),
             ],
             RESTART: [
+                CommandHandler('error', gen_error),
                 CallbackQueryHandler(restart),
                 MessageHandler(filters.TEXT, restart)
             ],
@@ -564,6 +619,7 @@ def main() -> None:
     )
 
     application.add_handler(conv_handler)
+    application.add_error_handler(error_handler)
 
     # Run the bot until the user presses Ctrl-C
     application.run_polling()
