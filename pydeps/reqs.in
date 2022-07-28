@@ -1,0 +1,7 @@
+#aiogram>=3.0.0-beta
+uvloop
+pyyaml
+ipython
+python-telegram-bot>=20.0a2
+ipdb
+uwsgi
