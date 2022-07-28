@@ -515,7 +515,7 @@ async def error_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
 
     await send_message(
         bot=context.bot,
-        channel_id=os.environ['I_NEED_HELP_CHANNEL_ID'],
+        channel_id=os.environ['DEVELOPER_CHANNEL_ID'],
         message_type='ОШИБКА',
         message_tag='error',
         user=None,
