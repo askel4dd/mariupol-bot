@@ -494,7 +494,7 @@ async def restart(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if message is not None:
         await message.reply_text(_('what_you_want'), reply_markup=reply_markup)
     else:
-        logger.info('Message is None, we are in callback_query: %s', in_callback_query)
+        logger.info('Message is None, we are in callback_query: %s, message: %s', in_callback_query, message)
 
     return WHAT_YOU_WANT
 
