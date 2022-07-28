@@ -4,16 +4,14 @@
 
 Pre-requirements:
 
-- Python3.10
-- VirtualEnv
+-   NodeJS >=14.13.1
+-   Yarn
 
 
 1. Clone this repo: `git clone https://github.com/askel4dd/mariupol-bot`
 2. Run `mv .env.sample .env` in the root directory to create `.env` file with the environment variables listed below
-3. Create virtualenv with `virtualenv bot`
-4. Activate virtualenv with `source ~/.virtualenvs/bot/bin/activate`
-5. Install requirements into the virtualenv with `pip3 install -r requirements.txt`
-6. Run `python3 pybot/convbot.py` in the root directory
+3. Run `yarn` in the root directory
+4. Run `yarn develop`
 
 # Environment variables
 
@@ -58,16 +56,14 @@ git push heroku main
 # Project structure
 
     .
-    ├── locales            # Bot replies/phrases in different languages
-    ├── src                # Previous version of the bot written in TypeScript
-    ├── pydeps             # Python requirements in pip-tools format
-    ├── pybot              # Python module
-        └── convbot.py     # Python file containing all the code of the bot
-    ├── requirements.txt   # Requirements. Copy of pydeps/reqs.txt, must be in the root because of Heroku
-    ├── Procfile           # Command to run the bot (needed for Heroku)
-    ├── runtime.txt        # File that specifies python version for Heroku to use
-    └── uwsgi.ini          # Ini file for uwsgi, runner for python script
-
+    ├── locales         # Bot replies/phrases in different languages
+    └── src
+        ├── app.ts      # Entry file of Bot
+        ├── models      # Domain models
+        ├── handlers    # Commands handlers https://grammy.dev/guide/commands.html
+        ├── middlewares # Middlewares https://grammy.dev/guide/middleware.html
+        ├── menus       # Menus https://grammy.dev/plugins/menu.html
+        └── helpers     # Handy util functions
 
 # License
 
