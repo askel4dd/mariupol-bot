@@ -474,7 +474,9 @@ async def emergency_result(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def restart(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
+    in_callback_query = False
     if query:
+        in_callback_query = True
         await query.answer()
         await query.edit_message_reply_markup(None)
         message = query.message
@@ -489,7 +491,10 @@ async def restart(update: Update, context: ContextTypes.DEFAULT_TYPE):
         ]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    await message.reply_text(_('what_you_want'), reply_markup=reply_markup)
+    if message is not None:
+        await message.reply_text(_('what_you_want'), reply_markup=reply_markup)
+    else:
+        logger.info('Message is None, we are in callback_query: %s', in_callback_query)
 
     return WHAT_YOU_WANT
 
